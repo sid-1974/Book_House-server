@@ -1,8 +1,6 @@
 const express = require("express")
 const cors = require("cors");
-
-
-
+const Authrouter = require("./routers/Auth.route");
 
 require("dotenv").config();
 require('./models/db')
@@ -21,7 +19,7 @@ app.use(
 );
 
 //routers
-
+app.use("/auth/api",Authrouter);
 app.get("/",(req,res)=>{
   res.send("Welcome to BookHouse Server")
 })
