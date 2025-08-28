@@ -36,6 +36,7 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = new UserModel({
       userid,
+      fullname,
       email,
       password: hashedPassword,
       mobileno,
