@@ -10,11 +10,7 @@ const ResponseMessages = {
     message: "Login successful.",
     statusCode: 200
   },
-  USER_FOUND: {
-    success: true,
-    message: "User found successfully.",
-    statusCode: 200
-  },
+  
 
   // Error messages
   EMAIL_ALREADY_EXISTS: {
@@ -40,6 +36,16 @@ const ResponseMessages = {
   VALIDATION_ERROR: {
     success: false,
     message: "Please provide all required fields.",
+    statusCode: 400
+  },
+  PASSWORD_LENGTH: {
+    success: false,
+    message: "Password must be at least 6 characters long",
+    statusCode: 400
+  },
+  NUMBER_LENGTH: {
+    success: false,
+    message: "Mobile number must be exactly 10 digits",
     statusCode: 400
   },
 };

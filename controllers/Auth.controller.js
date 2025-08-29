@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const ResponseMessages = require('../utils/ResponseMessages');
 const { generateSequentialUserId } = require('../utils/Helpers');
+const { getWelcomeMessage } = require('../utils/email/EmailMessages');
+const { sendMail } = require('../utils/email/EmailService');
 
 const signup = async (req, res) => {
   try {
@@ -11,6 +13,18 @@ const signup = async (req, res) => {
     if ( !fullname|| !email || !mobileno || !password) {
       return res.status(ResponseMessages.VALIDATION_ERROR.statusCode)
                 .json(ResponseMessages.VALIDATION_ERROR);
+    }
+
+    if (password.length < 6) {
+      return res.status(ResponseMessages.PASSWORD_LENGTH.statusCode)
+                .json(ResponseMessages.PASSWORD_LENGTH);
+    }
+
+   
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(mobileno)) {
+     return res.status(ResponseMessages.NUMBER_LENGTH.statusCode)
+                .json(ResponseMessages.NUMBER_LENGTH);
     }
 
     const existingUser = await UserModel.findOne({  $or: [{ email }, { mobileno }] });
@@ -43,6 +57,12 @@ const signup = async (req, res) => {
       ...otherDetails,
     });
     await newUser.save();
+     try {
+      const { welcomeMessage, welcomeSubject } = getWelcomeMessage(newUser);
+      await sendMail(email, welcomeSubject, welcomeMessage);
+    } catch (emailError) {
+      console.error("Email error:", emailError);
+    }
     return res.status(ResponseMessages.REGISTRATION_SUCCESS.statusCode)
                   .json(ResponseMessages.REGISTRATION_SUCCESS);
   } catch (error) {
