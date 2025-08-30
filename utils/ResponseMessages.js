@@ -46,7 +46,7 @@ const ResponseMessages = {
   INVALID_CREDENTIALS: {
     success: false,
     message: "Invalid email or password. Please try again.",
-    statusCode: 401
+    statusCode: 404
   },
   VALIDATION_ERROR: {
     success: false,
