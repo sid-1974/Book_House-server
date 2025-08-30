@@ -25,6 +25,13 @@ const ResponseMessages = {
     message: "OTP sent to your register email.",
     statusCode: 200
   },
+
+  //server error 
+  SERVER_ERROR: {
+    success: false,
+    message: "Internal server error. Please try again later.",
+    statusCode: 500
+  },
   
 
   // Error messages

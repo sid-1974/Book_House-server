@@ -1,11 +1,11 @@
-const UserModel = require('../models/user');
+const UserModel = require('../../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-const ResponseMessages = require('../utils/ResponseMessages');
-const { generateSequentialUserId } = require('../utils/Helpers');
-const { getWelcomeMessage, getOtpSentMessage } = require('../utils/email/EmailMessages');
-const { sendMail } = require('../utils/email/EmailService');
-const { verifyOTP, generateOTP, storeOTP } = require('../utils/email/OtpServices');
+const ResponseMessages = require('../../utils/ResponseMessages');
+const { generateSequentialUserId } = require('../../utils/Helpers');
+const { getWelcomeMessage, getOtpSentMessage } = require('../../utils/email/EmailMessages');
+const { sendMail } = require('../../utils/email/EmailService');
+const { verifyOTP, generateOTP, storeOTP } = require('../../utils/email/OtpServices');
 
 const signup = async (req, res) => {
   try {
@@ -67,7 +67,9 @@ const signup = async (req, res) => {
     return res.status(ResponseMessages.REGISTRATION_SUCCESS.statusCode)
                   .json(ResponseMessages.REGISTRATION_SUCCESS);
   } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+      console.error("Signunp error:", error);
+    return res.status(ResponseMessages.SERVER_ERROR.statusCode)
+                  .json(ResponseMessages.SERVER_ERROR);
   }
 };
 
@@ -108,7 +110,9 @@ const signin = async (req, res) => {
 });
 
   } catch (error) {
-    return res.status(500).json({ success: false, message:error.message });
+    console.error("Signin error:", error);
+    return res.status(ResponseMessages.SERVER_ERROR.statusCode)
+                  .json(ResponseMessages.SERVER_ERROR);
   }
 };
 
@@ -163,7 +167,9 @@ const forgotPassword = async (req, res) => {
               .json(ResponseMessages.OTP_SENT);
 
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    console.error("forgot Password error:", error);
+    return res.status(ResponseMessages.SERVER_ERROR.statusCode)
+                  .json(ResponseMessages.SERVER_ERROR);
   }
 }
 
