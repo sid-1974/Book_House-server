@@ -10,6 +10,21 @@ const ResponseMessages = {
     message: "Login successful.",
     statusCode: 200
   },
+  OTP_SUCCESS: {
+    success: true,
+    message: "OTP verified. Now set a new password.",
+    statusCode: 200
+  },
+  PASSWORD_RESET: {
+    success: true,
+    message: "Password reset successfully.",
+    statusCode: 200
+  },
+  OTP_SENT: {
+    success: true,
+    message: "OTP sent to your register email.",
+    statusCode: 200
+  },
   
 
   // Error messages
@@ -46,6 +61,16 @@ const ResponseMessages = {
   NUMBER_LENGTH: {
     success: false,
     message: "Mobile number must be exactly 10 digits",
+    statusCode: 400
+  },
+  INVALID_OTP: {
+    success: false,
+    message: "Invalid OTP or expired",
+    statusCode: 400
+  },
+  NEW_PASSWORD: {
+    success: false,
+    message: "New password must be different from the previous password",
     statusCode: 400
   },
 };

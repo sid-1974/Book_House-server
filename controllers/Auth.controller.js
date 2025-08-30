@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const ResponseMessages = require('../utils/ResponseMessages');
 const { generateSequentialUserId } = require('../utils/Helpers');
-const { getWelcomeMessage } = require('../utils/email/EmailMessages');
+const { getWelcomeMessage, getOtpSentMessage } = require('../utils/email/EmailMessages');
 const { sendMail } = require('../utils/email/EmailService');
+const { verifyOTP, generateOTP, storeOTP } = require('../utils/email/OtpServices');
 
 const signup = async (req, res) => {
   try {
@@ -111,7 +112,62 @@ const signin = async (req, res) => {
   }
 };
 
-module.exports = { signup, signin };
+const forgotPassword = async (req, res) => {
+  try {
+    const { email, password, otp } = req.body;
+    const user = await UserModel.findOne({ email });
+    
+    if (!user) {
+      return res.status(ResponseMessages.USER_NOT_FOUND.statusCode)
+                .json(ResponseMessages.USER_NOT_FOUND);
+    }
+
+    if (otp && !password ) {
+      if (!verifyOTP(email, otp)) {
+        return res.status(ResponseMessages.INVALID_OTP.statusCode)
+                  .json(ResponseMessages.INVALID_OTP);
+      }
+      return res.status(ResponseMessages.OTP_SUCCESS.statusCode)
+                .json(ResponseMessages.OTP_SUCCESS);
+    }
+
+    if (password ) {
+      const isSamePassword = await bcrypt.compare(password, user.password);
+      if (isSamePassword) {
+        return res.status(ResponseMessages.NEW_PASSWORD.statusCode)
+                  .json(ResponseMessages.NEW_PASSWORD);
+      }
+      if (password.length < 6) {
+        return res.status(ResponseMessages.PASSWORD_LENGTH.statusCode)
+                  .json(ResponseMessages.PASSWORD_LENGTH);
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+      await user.save();
+      
+      return res.status(ResponseMessages.PASSWORD_RESET.statusCode)
+                .json(ResponseMessages.PASSWORD_RESET);
+    }
+
+    const newOtp = generateOTP();
+    storeOTP(email, newOtp);
+    
+    try {
+      const { otpMessage, otpSubject } = getOtpSentMessage(user, newOtp);
+      await sendMail(email, otpSubject, otpMessage);
+    } catch (emailError) {
+      console.error("Email error:", emailError);
+    }
+    
+    return res.status(ResponseMessages.OTP_SENT.statusCode)
+              .json(ResponseMessages.OTP_SENT);
+
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+module.exports = { signup, signin,forgotPassword};
 
 
 

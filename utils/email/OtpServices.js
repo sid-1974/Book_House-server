@@ -18,7 +18,8 @@ const generateOTP = (length = 6) => {
 
 
   const verifyOTP = (email, otp) => {
-    if (otpStore[email] && otpStore[email] === otp) {
+    if (!otpStore[email]) return false;
+    if (otpStore[email] === otp) {
       delete otpStore[email]; 
       return true;
     }

@@ -55,4 +55,51 @@ const getWelcomeMessage = (userDetails) => {
   return { welcomeMessage, welcomeSubject };
 };
 
-module.exports = { getWelcomeMessage };
+const getOtpSentMessage = (userDetails, otp) => {
+  const otpSubject = `Your OTP from Book House`;
+
+  const otpMessage = `
+    <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; margin-bottom: 100px; background-color: white; color: #1a1a1a;">
+      
+      <h2 style="color: black; margin-bottom: 10px;">
+        OTP Verification - <span style="color: #6b7280;">Book House</span>
+      </h2>
+      
+      <p>Dear <strong>${userDetails.fullname || "User"}</strong>,</p>
+      
+      <p>We received a request to reset your password for your <strong>Book House</strong> account.</p>
+
+      <p style="margin-top: 20px;">
+        Please use the following OTP to proceed:
+      </p>
+
+      <p style="
+        font-size: 24px;
+        letter-spacing: 4px;
+        font-weight: bold;
+        color: #1a1a1a;
+        background-color: #f3f4f6;
+        padding: 10px 20px;
+        display: inline-block;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+      ">
+        ${otp}
+      </p>
+
+      <p style="margin-top: 30px; color: #6b7280;">
+        This OTP is valid for <strong>3 minutes</strong>. Please do not share it with anyone.
+      </p>
+
+      <p style="margin-top: 30px; color: #6b7280;">
+        Best regards,<br/>
+        <strong>Team Book House</strong>
+      </p>
+    </div>
+  `;
+
+  return { otpMessage, otpSubject };
+};
+
+
+module.exports = { getWelcomeMessage,getOtpSentMessage };
