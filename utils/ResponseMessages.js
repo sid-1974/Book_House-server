@@ -25,6 +25,11 @@ const ResponseMessages = {
     message: "OTP sent to your register email.",
     statusCode: 200
   },
+  UPDATE_PROFILE_BY_ID: {
+    success: true,
+    message: "Profile updated successfully.",
+    statusCode: 200
+  },
 
   //server error 
   SERVER_ERROR: {
