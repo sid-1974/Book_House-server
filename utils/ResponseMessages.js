@@ -30,6 +30,13 @@ const ResponseMessages = {
     message: "Profile updated successfully.",
     statusCode: 200
   },
+  ADD_BOOK: {
+    success: true,
+    message: "Book Added successfully.",
+    statusCode: 200
+  },
+
+
 
   //server error 
   SERVER_ERROR: {
