@@ -24,10 +24,27 @@ const updateProfileById = async (req, res) => {
 
     const { userid, _id, __v, password, ...safeUpdateData } = updateData;
 
+    const user = await UserModel.findOne({ userid: id });
+    if (!user) {
+      return res.status(ResponseMessages.USER_NOT_FOUND.statusCode)
+                .json(ResponseMessages.USER_NOT_FOUND);
+    }
+
     if (password) {
+      const isSamePassword = await bcrypt.compare(password, user.password);
+      if (isSamePassword) {
+        return res.status(ResponseMessages.NEW_PASSWORD.statusCode)
+                  .json(ResponseMessages.NEW_PASSWORD);
+      }
+    
+      if (password.length < 6) {
+        return res.status(ResponseMessages.PASSWORD_LENGTH.statusCode)
+                  .json(ResponseMessages.PASSWORD_LENGTH);
+      }
+  
       const saltRounds = 10;
       safeUpdateData.password = await bcrypt.hash(password, saltRounds);
-    }
+    } 
 
     const updatedUser = await UserModel.findOneAndUpdate(
       { userid: id },
